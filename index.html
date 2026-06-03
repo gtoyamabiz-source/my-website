@@ -20,27 +20,27 @@
             background-color: #0b0f19; /* 極めて深いネイビー（ダークモード） */
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             color: #f8fafc;
             font-family: 'Noto Sans JP', sans-serif;
         }
 
-        /* 16:9 プレゼン用コンテナ */
+        /* iPhone/Safari 縦画面表示に最適化したスクロールコンテナ */
         .slide-container {
-            width: 1280px;
-            height: 720px;
+            width: 100%;
+            max-width: 480px; /* iPhone Pro Maxクラスの幅にフィット */
+            min-height: 100vh;
             background-color: #0f172a;
             position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 40px 50px;
+            padding: 20px 15px;
             background-image: 
                 radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
                 linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95));
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: none;
+            box-shadow: none;
         }
 
         /* トップ装飾バー */
@@ -50,66 +50,72 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: linear-gradient(90deg, #38bdf8, #818cf8, #fbbf24);
         }
 
         /* ヘッダー */
         .header {
-            margin-bottom: 25px;
-            border-left: 6px solid #fbbf24;
-            padding-left: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #fbbf24;
+            padding-left: 12px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
         }
 
         .slide-title {
-            font-size: 34px;
+            font-size: 18px;
             font-weight: 700;
             margin: 0;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             color: #ffffff;
         }
 
         .subtitle {
-            font-size: 16px;
+            font-size: 11px;
             color: #94a3b8;
-            margin-top: 4px;
+            margin-top: 1px;
         }
 
         .instruction-badge {
             background: rgba(251, 191, 36, 0.1);
             border: 1px solid rgba(251, 191, 36, 0.3);
             color: #fbbf24;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
+            align-self: flex-start;
         }
 
-        /* メインレイアウト（スプリット） */
+        /* メインレイアウト（縦並び・スマホ特化） */
         .main-layout {
             display: flex;
-            gap: 30px;
+            flex-direction: column; /* 上下に分割 */
+            gap: 15px;
             flex-grow: 1;
-            height: calc(100% - 140px);
         }
 
-        /* 左側：テーブルエリア */
+        /* 上段：テーブルエリア */
         .table-area {
-            flex: 1.2;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
+            width: 100%;
         }
 
         .table-wrapper {
             background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid rgba(148, 163, 184, 0.15);
             overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        /* スムーズなスクロールを実現 */
+        .scrollable-table {
+            max-height: 200px; /* iPhone画面に収まるよう高さを制限 */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* iOSでの慣性スクロール */
         }
 
         table {
@@ -121,40 +127,40 @@
         th {
             background-color: rgba(51, 65, 85, 0.9);
             color: #fbbf24;
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 12px 10px;
-            border-bottom: 2px solid #475569;
-            letter-spacing: 0.05em;
+            padding: 8px 4px;
+            border-bottom: 1.5px solid #475569;
+            letter-spacing: 0.02em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         td {
-            padding: 9px 10px;
+            padding: 8px 4px;
             border-bottom: 1px solid rgba(71, 85, 105, 0.4);
-            font-size: 14px;
+            font-size: 11.5px;
             font-family: 'Roboto Mono', monospace;
             cursor: pointer;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent; /* タップ時の青い枠を消す */
         }
 
         /* アクティブ行のスタイル */
         tr.active-row {
-            background-color: rgba(56, 189, 248, 0.15) !important;
+            background-color: rgba(56, 189, 248, 0.18) !important;
         }
         tr.active-row td {
             color: #ffffff;
             font-weight: 700;
         }
         tr.active-row td:first-child {
-            border-left: 4px solid #38bdf8;
+            border-left: 3px solid #38bdf8;
         }
 
         tr:nth-child(even) {
             background-color: rgba(30, 41, 59, 0.25);
-        }
-
-        tr:hover {
-            background-color: rgba(148, 163, 184, 0.1);
         }
 
         /* 各クリアランス列のカラーサイン */
@@ -162,55 +168,52 @@
         .col-cut { color: #f87171; }       /* 切断：赤 */
         .col-bevel { color: #60a5fa; }     /* 開先：青 */
 
-        /* 右側：図面エリア */
+        /* 下段：図面エリア */
         .diagram-area {
-            flex: 1;
+            width: 100%;
             background: rgba(15, 23, 42, 0.8);
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 20px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.05);
+            gap: 10px;
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.05);
         }
 
         .diagram-title {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 700;
             color: #38bdf8;
-            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
 
         .current-selection-badge {
             background: rgba(56, 189, 248, 0.15);
             color: #38bdf8;
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 11px;
             font-family: 'Roboto Mono', monospace;
         }
 
         /* SVGグラフィックコンテナ */
         .svg-container {
-            flex-grow: 1;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            max-height: 380px;
+            min-height: 250px;
         }
 
         svg {
             width: 100%;
-            height: 100%;
-            max-width: 380px;
-            max-height: 380px;
+            height: auto;
+            max-width: 320px;
         }
 
         /* SVG内の円、線、文字が滑らかにアニメーションするトランジション設定 */
@@ -220,32 +223,62 @@
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
+        /* 現在選定されている機械の情報カード */
+        .info-card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .info-card-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .info-card-item span {
+            color: #94a3b8;
+            font-size: 10px;
+        }
+
+        .info-card-item strong {
+            color: #ffffff;
+            font-size: 13px;
+        }
+
         /* フッター：計算式 */
         .footer {
-            margin-top: 15px;
+            margin-top: 10px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 10px;
             color: #94a3b8;
             border-top: 1px solid rgba(148, 163, 184, 0.1);
-            padding-top: 15px;
+            padding-top: 10px;
         }
 
         .formula-list {
             display: flex;
-            gap: 25px;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .formula-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .color-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             display: inline-block;
         }
@@ -257,10 +290,17 @@
             color: #ffffff;
         }
 
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
         .unit-label {
-            font-size: 12px;
+            font-size: 9px;
             background: rgba(148, 163, 184, 0.1);
-            padding: 2px 8px;
+            padding: 1px 6px;
             border-radius: 4px;
         }
     </style>
@@ -270,74 +310,73 @@
 <div class="slide-container">
     <!-- ヘッダー -->
     <div class="header">
-        <div>
-            <h1 class="slide-title">標準配管寸法早見表 ＆ クリアランス定義</h1>
-            <div class="subtitle">配管外壁（計測基準点）から各クリアランス外端までの距離（スケール対応型）</div>
-        </div>
-        <div class="instruction-badge">行をクリックして図面を連動</div>
+        <h1 class="slide-title">標準配管寸法早見表 ＆ クリアランス定義</h1>
+        <div class="subtitle">配管外壁（計測基準点）から各クリアランス外端までの距離</div>
+        <div class="instruction-badge">リストタップで図面をリアルタイム連動</div>
     </div>
 
-    <!-- メイン -->
+    <!-- メインレイアウト -->
     <div class="main-layout">
-        <!-- 左：テーブル -->
+        <!-- 上段：テーブルエリア -->
         <div class="table-area">
             <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>配管サイズ</th>
-                            <th>配管径 (φ)</th>
-                            <th>選定機械</th>
-                            <th>機械外径</th>
-                            <th>本体C (A)</th>
-                            <th>切断C (B)</th>
-                            <th>開先C (C)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <tr class="clickable-row active-row" data-size="6B" data-pipe="165.2" data-model="MDSF612" data-modelf="470.0" data-body="152.40" data-cut="262.40" data-bevel="212.40">
-                            <td>6B</td><td>165.2</td><td>MDSF612</td><td>470.0</td><td class="col-clearance">152.40</td><td class="col-cut">262.40</td><td class="col-bevel">212.40</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="8B" data-pipe="216.3" data-model="MDSF814" data-modelf="505.5" data-body="144.60" data-cut="254.60" data-bevel="204.60">
-                            <td>8B</td><td>216.3</td><td>MDSF814</td><td>505.5</td><td class="col-clearance">144.60</td><td class="col-cut">254.60</td><td class="col-bevel">204.60</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="10B" data-pipe="267.4" data-model="MDSF1016" data-modelf="557.5" data-body="145.05" data-cut="255.05" data-bevel="205.05">
-                            <td>10B</td><td>267.4</td><td>MDSF1016</td><td>557.5</td><td class="col-clearance">145.05</td><td class="col-cut">255.05</td><td class="col-bevel">205.05</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="12B" data-pipe="318.5" data-model="MDSF1218" data-modelf="608.3" data-body="144.90" data-cut="254.90" data-bevel="204.90">
-                            <td>12B</td><td>318.5</td><td>MDSF1218</td><td>608.3</td><td class="col-clearance">144.90</td><td class="col-cut">254.90</td><td class="col-bevel">204.90</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="14B" data-pipe="355.6" data-model="MDSF1420" data-modelf="660.0" data-body="152.20" data-cut="262.20" data-bevel="252.20">
-                            <td>14B</td><td>355.6</td><td>MDSF1420</td><td>660.0</td><td class="col-clearance">152.20</td><td class="col-cut">262.20</td><td class="col-bevel">252.20</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="16B" data-pipe="406.4" data-model="MDSF1420" data-modelf="660.0" data-body="126.80" data-cut="236.80" data-bevel="226.80">
-                            <td>16B</td><td>406.4</td><td>MDSF1420</td><td>660.0</td><td class="col-clearance">126.80</td><td class="col-cut">236.80</td><td class="col-bevel">226.80</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="18B" data-pipe="457.2" data-model="MDSF1824" data-modelf="771.0" data-body="156.90" data-cut="266.90" data-bevel="256.90">
-                            <td>18B</td><td>457.2</td><td>MDSF1824</td><td>771.0</td><td class="col-clearance">156.90</td><td class="col-cut">266.90</td><td class="col-bevel">256.90</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="20B" data-pipe="508.0" data-model="MDSF1824" data-modelf="771.0" data-body="131.50" data-cut="241.50" data-bevel="231.50">
-                            <td>20B</td><td>508.0</td><td>MDSF1824</td><td>771.0</td><td class="col-clearance">131.50</td><td class="col-cut">241.50</td><td class="col-bevel">231.50</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="22B" data-pipe="558.78" data-model="MDSF2228" data-modelf="903.0" data-body="172.11" data-cut="282.11" data-bevel="232.11">
-                            <td>22B</td><td>558.78</td><td>MDSF2228</td><td>903.0</td><td class="col-clearance">172.11</td><td class="col-cut">282.11</td><td class="col-bevel">232.11</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="24B" data-pipe="609.6" data-model="MDSF2228" data-modelf="903.0" data-body="146.70" data-cut="256.70" data-bevel="206.70">
-                            <td>24B</td><td>609.6</td><td>MDSF2228</td><td>903.0</td><td class="col-clearance">146.70</td><td class="col-cut">256.70</td><td class="col-bevel">206.70</td>
-                        </tr>
-                        <tr class="clickable-row" data-size="26B" data-pipe="660.4" data-model="MDSF2632" data-modelf="1005.0" data-body="172.30" data-cut="282.30" data-bevel="232.30">
-                            <td>26B</td><td>660.4</td><td>MDSF2632</td><td>1005.0</td><td class="col-clearance">172.30</td><td class="col-cut">282.30</td><td class="col-bevel">232.30</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>サイズ</th>
+                                <th>配管径</th>
+                                <th>選定機械</th>
+                                <th>本体C (A)</th>
+                                <th>切断C (B)</th>
+                                <th>開先C (C)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr class="clickable-row active-row" data-size="6B" data-pipe="165.2" data-model="MDSF612" data-modelf="470.0" data-body="152.40" data-cut="262.40" data-bevel="212.40">
+                                <td>6B</td><td>165.2</td><td>MDSF612</td><td class="col-clearance">152.40</td><td class="col-cut">262.40</td><td class="col-bevel">212.40</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="8B" data-pipe="216.3" data-model="MDSF814" data-modelf="505.5" data-body="144.60" data-cut="254.60" data-bevel="204.60">
+                                <td>8B</td><td>216.3</td><td>MDSF814</td><td class="col-clearance">144.60</td><td class="col-cut">254.60</td><td class="col-bevel">204.60</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="10B" data-pipe="267.4" data-model="MDSF1016" data-modelf="557.5" data-body="145.05" data-cut="255.05" data-bevel="205.05">
+                                <td>10B</td><td>267.4</td><td>MDSF1016</td><td class="col-clearance">145.05</td><td class="col-cut">255.05</td><td class="col-bevel">205.05</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="12B" data-pipe="318.5" data-model="MDSF1218" data-modelf="608.3" data-body="144.90" data-cut="254.90" data-bevel="204.90">
+                                <td>12B</td><td>318.5</td><td>MDSF1218</td><td class="col-clearance">144.90</td><td class="col-cut">254.90</td><td class="col-bevel">204.90</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="14B" data-pipe="355.6" data-model="MDSF1420" data-modelf="660.0" data-body="152.20" data-cut="262.20" data-bevel="252.20">
+                                <td>14B</td><td>355.6</td><td>MDSF1420</td><td class="col-clearance">152.20</td><td class="col-cut">262.20</td><td class="col-bevel">252.20</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="16B" data-pipe="406.4" data-model="MDSF1420" data-modelf="660.0" data-body="126.80" data-cut="236.80" data-bevel="226.80">
+                                <td>16B</td><td>406.4</td><td>MDSF1420</td><td class="col-clearance">126.80</td><td class="col-cut">236.80</td><td class="col-bevel">226.80</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="18B" data-pipe="457.2" data-model="MDSF1824" data-modelf="771.0" data-body="156.90" data-cut="266.90" data-bevel="256.90">
+                                <td>18B</td><td>457.2</td><td>MDSF1824</td><td class="col-clearance">156.90</td><td class="col-cut">266.90</td><td class="col-bevel">256.90</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="20B" data-pipe="508.0" data-model="MDSF1824" data-modelf="771.0" data-body="131.50" data-cut="241.50" data-bevel="231.50">
+                                <td>20B</td><td>508.0</td><td>MDSF1824</td><td class="col-clearance">131.50</td><td class="col-cut">241.50</td><td class="col-bevel">231.50</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="22B" data-pipe="558.78" data-model="MDSF2228" data-modelf="903.0" data-body="172.11" data-cut="282.11" data-bevel="232.11">
+                                <td>22B</td><td>558.78</td><td>MDSF2228</td><td class="col-clearance">172.11</td><td class="col-cut">282.11</td><td class="col-bevel">232.11</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="24B" data-pipe="609.6" data-model="MDSF2228" data-modelf="903.0" data-body="146.70" data-cut="256.70" data-bevel="206.70">
+                                <td>24B</td><td>609.6</td><td>MDSF2228</td><td class="col-clearance">146.70</td><td class="col-cut">256.70</td><td class="col-bevel">206.70</td>
+                            </tr>
+                            <tr class="clickable-row" data-size="26B" data-pipe="660.4" data-model="MDSF2632" data-modelf="1005.0" data-body="172.30" data-cut="282.30" data-bevel="232.30">
+                                <td>26B</td><td>660.4</td><td>MDSF2632</td><td class="col-clearance">172.30</td><td class="col-cut">282.30</td><td class="col-bevel">232.30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- 右：図面 -->
+        <!-- 下段：図面エリア -->
         <div class="diagram-area">
             <div class="diagram-title">
-                <span>寸法定義＆クリアランス概念図（実寸比例）</span>
-                <span class="current-selection-badge" id="selected-badge">選択サイズ: 6B (φ165.2)</span>
+                <span>クリアランス概念図（実寸比例）</span>
+                <span class="current-selection-badge" id="selected-badge">6B (φ165.2)</span>
             </div>
 
             <!-- ベクターCAD図面 -->
@@ -366,53 +405,57 @@
                     <!-- ① 配管 (Pipe) -->
                     <circle id="svg-pipe-circle" cx="200" cy="200" r="50" stroke="#94a3b8" stroke-width="3" fill="#1e293b" fill-opacity="0.8"/>
                     <text x="200" y="195" fill="#94a3b8" font-size="12" font-weight="bold" text-anchor="middle">配管 (Pipe)</text>
-                    <text id="svg-pipe-val" x="200" y="212" fill="#94a3b8" font-size="11" font-family="'Roboto Mono'" text-anchor="middle">φ165.2</text>
+                    <text id="svg-pipe-val" x="200" y="213" fill="#ffffff" font-size="13" font-family="'Roboto Mono'" font-weight="bold" text-anchor="middle">φ165.2</text>
 
                     <!-- ② 機械本体フレーム (Machine Body) -->
                     <circle id="svg-machine-circle-dash" cx="200" cy="200" r="100" stroke="#475569" stroke-width="2" stroke-dasharray="4 2"/>
                     <circle id="svg-machine-circle-solid" cx="200" cy="200" r="105" stroke="#facc15" stroke-width="1.5" stroke-opacity="0.4"/>
-                    <text id="svg-machine-label" x="200" y="115" fill="#facc15" font-size="10" font-weight="bold" text-anchor="middle" fill-opacity="0.8">機械本体枠 (MDSF)</text>
+                    <text id="svg-machine-label" x="200" y="115" fill="#facc15" font-size="11" font-weight="bold" text-anchor="middle" fill-opacity="0.8">機械本体枠 (MDSF)</text>
 
                     <!-- 寸法計測の基準点 (配管外壁) -->
-                    <circle id="svg-ref-dot" cx="250" cy="200" r="3.5" fill="#ef4444"/>
-                    <text id="svg-ref-text" x="245" y="185" fill="#ef4444" font-size="9" font-weight="bold" text-anchor="end">寸法基準(配管外壁)</text>
+                    <circle id="svg-ref-dot" cx="250" cy="200" r="4" fill="#ef4444"/>
+                    <text id="svg-ref-text" x="245" y="185" fill="#ef4444" font-size="10" font-weight="bold" text-anchor="end">寸法基準(配管外壁)</text>
 
                     <!-- A: 本体クリアランス寸法線 -->
-                    <line id="line-body" x1="250" y1="230" x2="305" y2="230" stroke="#facc15" stroke-width="1.5" marker-start="url(#arrow-body)" marker-end="url(#arrow-body)"/>
-                    <line id="aux-body-left" x1="250" y1="200" x2="250" y2="242" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <line id="aux-body-right" x1="305" y1="200" x2="305" y2="242" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <text id="lbl-body-val" x="277" y="248" fill="#facc15" font-size="11" font-family="'Roboto Mono'" font-weight="bold" text-anchor="middle">152.40</text>
-                    <text id="lbl-body-title" x="277" y="260" fill="#facc15" font-size="9" text-anchor="middle">本体C (A)</text>
+                    <line id="line-body" x1="250" y1="230" x2="305" y2="230" stroke="#facc15" stroke-width="2" marker-start="url(#arrow-body)" marker-end="url(#arrow-body)"/>
+                    <line id="aux-body-left" x1="250" y1="200" x2="250" y2="242" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <line id="aux-body-right" x1="305" y1="200" x2="305" y2="242" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <!-- 数値を大きく・見やすく配置 -->
+                    <text id="lbl-body-val" x="277" y="254" fill="#facc15" font-size="17" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">152.40</text>
+                    <text id="lbl-body-title" x="277" y="267" fill="#facc15" font-size="10.5" text-anchor="middle">本体C (A)</text>
 
                     <!-- B: 切断クリアランス寸法線 -->
-                    <line id="line-cut" x1="250" y1="300" x2="340" y2="300" stroke="#f87171" stroke-width="1.5" marker-start="url(#arrow-cut)" marker-end="url(#arrow-cut)"/>
-                    <line id="aux-cut-left" x1="250" y1="200" x2="250" y2="312" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <line id="aux-cut-right" x1="340" y1="200" x2="340" y2="312" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <text id="lbl-cut-val" x="295" y="318" fill="#f87171" font-size="11" font-family="'Roboto Mono'" font-weight="bold" text-anchor="middle">262.40</text>
-                    <text id="lbl-cut-title" x="295" y="330" fill="#f87171" font-size="9" text-anchor="middle">切断クリアランス (B = A + 110)</text>
+                    <line id="line-cut" x1="250" y1="300" x2="340" y2="300" stroke="#f87171" stroke-width="2" marker-start="url(#arrow-cut)" marker-end="url(#arrow-cut)"/>
+                    <line id="aux-cut-left" x1="250" y1="200" x2="250" y2="312" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <line id="aux-cut-right" x1="340" y1="200" x2="340" y2="312" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <!-- 数値を大きく・見やすく配置 -->
+                    <text id="lbl-cut-val" x="295" y="324" fill="#f87171" font-size="17" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">262.40</text>
+                    <text id="lbl-cut-title" x="295" y="337" fill="#f87171" font-size="10.5" text-anchor="middle">切断C (B = A+110)</text>
 
                     <!-- C: 開先クリアランス寸法線 -->
-                    <line id="line-bevel" x1="250" y1="35" x2="325" y2="35" stroke="#60a5fa" stroke-width="1.5" marker-start="url(#arrow-bevel)" marker-end="url(#arrow-bevel)"/>
-                    <line id="aux-bevel-left" x1="250" y1="200" x2="250" y2="23" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <line id="aux-bevel-right" x1="325" y1="200" x2="325" y2="23" stroke="#475569" stroke-width="1" stroke-dasharray="2 2"/>
-                    <text id="lbl-bevel-val" x="287" y="52" fill="#60a5fa" font-size="11" font-family="'Roboto Mono'" font-weight="bold" text-anchor="middle">212.40</text>
-                    <text id="lbl-bevel-title" x="287" y="23" fill="#60a5fa" font-size="9" text-anchor="middle">開先クリアランス (C = A + BS)</text>
+                    <line id="line-bevel" x1="250" y1="35" x2="325" y2="35" stroke="#60a5fa" stroke-width="2" marker-start="url(#arrow-bevel)" marker-end="url(#arrow-bevel)"/>
+                    <line id="aux-bevel-left" x1="250" y1="200" x2="250" y2="21" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <line id="aux-bevel-right" x1="325" y1="200" x2="325" y2="21" stroke="#475569" stroke-width="1.2" stroke-dasharray="2 2"/>
+                    <!-- 数値を大きく・見やすく配置 -->
+                    <text id="lbl-bevel-val" x="287" y="55" fill="#60a5fa" font-size="17" font-family="'Roboto Mono'" font-weight="700" text-anchor="middle">212.40</text>
+                    <text id="lbl-bevel-title" x="287" y="21" fill="#60a5fa" font-size="10.5" text-anchor="middle">開先C (C = A+BS)</text>
 
                     <!-- 最外周（切断／開先稼働域）イメージの円弧（補助線） -->
-                    <circle id="svg-cut-limit-circle" cx="200" cy="200" r="140" stroke="#f87171" stroke-width="1" stroke-dasharray="6 4" stroke-opacity="0.25"/>
-                    <circle id="svg-bevel-limit-circle" cx="200" cy="200" r="125" stroke="#60a5fa" stroke-width="1" stroke-dasharray="6 4" stroke-opacity="0.25"/>
+                    <circle id="svg-cut-limit-circle" cx="200" cy="200" r="140" stroke="#f87171" stroke-width="1.2" stroke-dasharray="6 4" stroke-opacity="0.25"/>
+                    <circle id="svg-bevel-limit-circle" cx="200" cy="200" r="125" stroke="#60a5fa" stroke-width="1.2" stroke-dasharray="6 4" stroke-opacity="0.25"/>
                 </svg>
             </div>
 
-            <!-- 現在選定されている機械の情報カード -->
-            <div style="background: rgba(30, 41, 59, 0.8); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); font-size: 13px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="color: #94a3b8;">選定マシン:</span>
-                    <strong style="color: #ffffff;" id="selected-machine">MDSF612</strong>
+            <!-- 現在選定されている機械の情報カード（ミニマル化） -->
+            <div class="info-card">
+                <div class="info-card-item">
+                    <span>選定マシン</span>
+                    <strong id="selected-machine">MDSF612</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #94a3b8;">機械外径:</span>
-                    <strong style="color: #ffffff;" id="selected-outer">φ470.0 mm</strong>
+                <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.1);"></div>
+                <div class="info-card-item">
+                    <span>機械外径</span>
+                    <strong id="selected-outer">φ470.0 mm</strong>
                 </div>
             </div>
         </div>
@@ -423,24 +466,28 @@
         <div class="formula-list">
             <div class="formula-item">
                 <span class="color-dot dot-body"></span>
-                <span class="formula-text"><strong>本体クリアランス (A)</strong> = (機械外径 － 配管外径) ÷ 2</span>
+                <span class="formula-text"><strong>本体C (A)</strong> = (機械外径 － 配管外径) ÷ 2</span>
             </div>
             <div class="formula-item">
                 <span class="color-dot dot-cut"></span>
-                <span class="formula-text"><strong>切断クリアランス (B)</strong> = 本体C ＋ 110mm</span>
+                <span class="formula-text"><strong>切断C (B)</strong> = 本体C ＋ 110mm</span>
             </div>
             <div class="formula-item">
                 <span class="color-dot dot-bevel"></span>
-                <span class="formula-text"><strong>開先クリアランス (C)</strong> = 本体C ＋ BS (60mm / 100mm*)</span>
+                <span class="formula-text"><strong>開先C (C)</strong> = 本体C ＋ BS (60mm / 100mm)</span>
             </div>
         </div>
-        <div class="unit-label">単位: mm</div>
+        <div class="footer-bottom">
+            <span>※BS=開先スライドベース幅</span>
+            <div class="unit-label">単位: mm</div>
+        </div>
     </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const rows = document.querySelectorAll(".clickable-row");
+        const tableBody = document.querySelector(".scrollable-table");
         
         // テキストDOM要素の取得
         const badge = document.getElementById("selected-badge");
@@ -571,7 +618,7 @@
             lblBevelVal.textContent = bevel.toFixed(2);
 
             // --- 6. 左下およびバッジのテキスト更新 ---
-            badge.textContent = `選択サイズ: ${size} (φ${pipe})`;
+            badge.textContent = `${size} (φ${pipe})`;
             svgPipeVal.textContent = `φ${pipe}`;
             txtMachine.textContent = model;
             txtOuter.textContent = `φ${modelf} mm`;
@@ -583,12 +630,15 @@
             updateDiagram(initialActiveRow);
         }
 
-        // クリックイベントの登録
+        // クリックイベントの登録とiOS Safariスクロール連動の改善
         rows.forEach(row => {
             row.addEventListener("click", () => {
                 rows.forEach(r => r.classList.remove("active-row"));
                 row.classList.add("active-row");
                 updateDiagram(row);
+
+                // アクティブ行がスクロール範囲外にならないよう自動調整
+                row.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
             });
         });
     });
